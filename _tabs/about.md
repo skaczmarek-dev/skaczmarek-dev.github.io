@@ -6,7 +6,4 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
-
-Hi! This is my private blog related to system administartion and selfhosting. This blog is about topics like self hosting, bash and puppet scripting, Linux administration.
+Hi! I'm full time Unix Engineer. This is my private blog related to system administartion and selfhosting. This blog is about topics like linux, self hosting, bash and puppet scripting. I like to share thought on topics I've learned during my work or fun projects.
