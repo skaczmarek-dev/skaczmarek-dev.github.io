@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Offsite backup with Restic to Wasabi S3"
-date: 2024-10-31 20:50:00
+date: 2024-10-31
 categories: [admin]
 tags: [backup, s3, restic, wasabi]
 ---
