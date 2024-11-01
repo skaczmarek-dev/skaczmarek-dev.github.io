@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Python getopts"
+author: skaczmarek
 date: 2024-11-01
 categories: [python]
 tags: [python]
@@ -13,8 +14,6 @@ Today, I would like to give you some ideas on how you can make your python scrip
 Method presented in this post is not the most convenient, but is easy to understand for people who came from C or Bash background. This is also mentioned in Python documentation:
 
 >The getopt module is a parser for command line options whose API is designed to be familiar to users of the C getopt() function. Users who are unfamiliar with the C getopt() function or who would like to write less code and get better help and error messages should consider using the argparse module instead. [source](https://docs.python.org/3/library/getopt.html#module-getopt)
-
-If you are looking for another method, that is more elegant and suited for python, please look at another post in this series - [link]()
 
 First of all, we need to understand how we can fetch arguments passed to script. In order to do that, we need module called **sys.argv**.
 
