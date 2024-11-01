@@ -6,9 +6,7 @@ categories: [python]
 tags: [python]
 ---
 
-Hello, 
-
-Today, I would like to give you some ideas of how you can make your python scripts more flexible and control them with arguments. In this post I will show you a method, that is very easy to understand and works very well with simple scripts, that require some data to be passed into. This is first part of two-posts mini-series about passing argument to python script.
+Today, I would like to give you some ideas on how you can make your python scripts more flexible and control them with arguments. In this post I will show you a method, that is very easy to understand and works very well with simple scripts, that require some data to be passed into. This is first part of two-posts mini-series about passing argument to python script.
 
 ## Little disclaimer
 
@@ -141,4 +139,4 @@ python getopt-playground.py --date 2020 --time 20:00 --message "some message"
 ```
 
 
-That's it, I hope it was clear. If you have any questions, please drop me a post below and remember to check second post in this series - [link]().
+That's it, I hope it was clear and useful.
