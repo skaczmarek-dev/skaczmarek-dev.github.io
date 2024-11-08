@@ -1,7 +1,6 @@
 ---
 layout: post
 title: "Python venv: Virtual Environments"
-author: skaczmarek
 date: 2024-11-08
 categories: [programming]
 tags: [python]
