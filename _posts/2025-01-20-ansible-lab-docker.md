@@ -8,29 +8,53 @@ tags: [docker]
 
 If you are not familiar with docker setup, please have a look at my previous post ...
 
-Docker containers provide a lightweight and efficient solution for testing Ansible. Unlike traditional virtual machines that require a hypervisor, containers allow you to set up a complete environment on your local machine quickly. This tutorial will guide you through creating a test Ansible environment consisting of three Docker containers:
-
-- Ansible Master - The controller node with Ansible installed.
-- Ubuntu Managed Host - A managed node running Ubuntu.
-- Rocky Managed Host - A managed node running Rocky Linux.
-
-You will configure the environment so that Ansible can connect to the managed hosts via SSH and perform basic commands or run playbooks.
+Docker containers offer a lightweight, efficient way to create a local testing environment for Ansible. Unlike full virtual machines, containers allow you to set up isolated systems on your machine without the need for a hypervisor. This guide will walk you through creating a lab consisting of an Ansible master node and two managed nodes (Ubuntu and Rocky Linux) using Docker Compose. The environment will be configured in a way allowing Ansible to connect to the managed hosts via `ssh` and perform basic commands or run playbooks.
 
 ## Project Structure
 
 The project will include the following files:
 
 ```plaintext
-ansible-docker-lab/
-│
-├── docker-compose.yml
-├── dockerfile.ubuntu
-├── dockerfile.rocky
+ansible_lab/
+├── ansible/            # Directory for Ansible playbooks and configuration
+├── docker-compose.yml  # Docker Compose configuration
+├── dockerfile.master   # Dockerfile for Ansible Master
+├── dockerfile.ubuntu   # Dockerfile for managed Ubuntu node
+└── dockerfile.rocky    # Dockerfile for managed Rocky Linux node
 ```
 
 ## Creating Dockerfiles for Containers
 
-### Dockerfile for Ansible Master and Ubuntu Managed Host
+### Dockerfile for Ansible Master
+
+```
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y openssh-server sudo software-properties-common && apt-get clean
+
+RUN add-apt-repository --yes --update ppa:ansible/ansible && \
+    apt-get update && \
+    apt-get install -y ansible
+
+RUN useradd -m -s /bin/bash ansible && echo "ansible:ansible" | chpasswd && usermod -aG sudo ansible
+
+RUN mkdir /var/run/sshd && ssh-keygen -A \
+    && mkdir /home/ansible/.ssh \
+    && chown -R ansible:ansible /home/ansible/.ssh
+
+RUN echo "PermitRootLogin no" >> /etc/ssh/sshd_config && \
+    echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
+    echo "AllowUsers ansible" >> /etc/ssh/sshd_config
+
+RUN chmod 644 /etc/ssh/sshd_config
+
+EXPOSE 22
+WORKDIR /home/ansible/playbooks
+RUN mkdir -p /home/ansible/playbooks && chown -R ansible:ansible /home/ansible/playbooks
+CMD ["/usr/sbin/sshd", "-D"]
+```
+
+### Dockerfile for Ubuntu Managed Host
 
 We will create a common Dockerfile for the Ansible Master and Ubuntu Managed Host.
 
@@ -223,3 +247,5 @@ Expected Output (ip addresses may vary, depending on your setup):
     "ping": "pong"
 }
 ```
+
+This tutorial demonstrates how to set up a lightweight Ansible testing lab using Docker containers. By defining custom Dockerfiles and using Docker Compose, you can replicate this environment on your local machine, experiment with playbooks, and practice configuration management across different Linux distributions.

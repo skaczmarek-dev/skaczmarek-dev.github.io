@@ -17,12 +17,24 @@ $ sudo apt update
 $ sudo apt install docker.io docker-compose
 ```
 
+On **Ubuntu 24.04**, you will need to install additionally this package:
+
+```bash
+$ sudo apt install python3-setuptools
+```
+
 ## Adding Your User to the Docker Group
 
 To run Docker commands without using sudo, add your user to the docker group. Replace ${USER} with different username if necessary:
 
 ``` bash
 $ sudo gpasswd -a ${USER} docker
+```
+
+You will need to log off and back on again to apply the new group. You can do this from the terminal:
+
+```
+$ su - username
 ```
 
 ## Enabling Docker to Start on Boot
