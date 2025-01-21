@@ -6,7 +6,7 @@ categories: [infrastructure]
 tags: [docker]
 ---
 
-If you are not familiar with docker setup, please have a look at my previous post (Docker - Ultimate Installation Guide)[https://skaczmarek-dev.github.io/posts/docker-ultimate-installation-guide/].
+If you are not familiar with docker setup, please have a look at my previous post [Docker - Ultimate Installation Guide](https://skaczmarek-dev.github.io/posts/docker-ultimate-installation-guide/).
 
 Docker containers offer a lightweight, efficient way to create a local testing environment for Ansible. Unlike full virtual machines, containers allow you to set up isolated systems on your machine without the need for a hypervisor. This guide will walk you through creating a lab consisting of an Ansible master node and two managed nodes (Ubuntu and Rocky Linux) using Docker Compose. The environment will be configured in a way allowing Ansible to connect to the managed hosts via `ssh` and perform basic commands or run playbooks.
 
