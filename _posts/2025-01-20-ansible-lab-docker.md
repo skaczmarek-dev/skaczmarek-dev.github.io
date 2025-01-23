@@ -61,7 +61,7 @@ We will create a common Dockerfile for the Ansible Master and Ubuntu Managed Hos
 Create the file `dockerfile.ubuntu`:
 
 ```
-FROM ubuntu:22.04
+FROM ubuntu:latest
 
 # Install necessary packages
 RUN apt update && apt install -y \
@@ -104,13 +104,13 @@ FROM rockylinux:9
 # Install necessary packages
 RUN dnf update -y && dnf install -y \
     openssh-server \
-    sudo python3 \
+    sudo python3 && \
     dnf clean all
 
 # Create a technical user
-RUN mkdir /var/run/sshd && ssh-keygen -A && \
-    mkdir -p /home/ansible/.ssh && \
-    chown -R ansible:ansible /home/ansible/.ssh
+RUN useradd -m -s /bin/bash ansible &&` \ 
+    echo "ansible:ansible" | chpasswd && \
+    usermod -aG wheel ansible
 
 # Configure SSH
 RUN mkdir /var/run/sshd && \
