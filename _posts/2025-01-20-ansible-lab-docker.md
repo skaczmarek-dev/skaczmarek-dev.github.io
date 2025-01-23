@@ -36,7 +36,9 @@ RUN add-apt-repository --yes --update ppa:ansible/ansible && \
     apt-get update && \
     apt-get install -y ansible
 
-RUN useradd -m -s /bin/bash ansible && echo "ansible:ansible" | chpasswd && usermod -aG sudo ansible
+RUN useradd -m -s /bin/bash ansible && \
+    echo "ansible:ansible" | chpasswd && \
+    usermod -aG sudo ansible
 
 RUN mkdir /var/run/sshd && ssh-keygen -A \
     && mkdir /home/ansible/.ssh \
