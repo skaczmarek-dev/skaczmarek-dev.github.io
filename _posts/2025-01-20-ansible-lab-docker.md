@@ -108,30 +108,28 @@ Create a file `dockerfile.rocky`:
 FROM rockylinux:9
 
 # Install necessary packages
-RUN dnf update -y && dnf install -y \
-    openssh-server \
-    sudo python3 && \
-    dnf clean all
+RUN dnf update -y && dnf install -y openssh-server sudo python3 && dnf clean all
 
 # Create a technical user
-RUN useradd -m -s /bin/bash ansible && \ 
-    echo "ansible:ansible" | chpasswd && \
-    usermod -aG wheel ansible
+RUN useradd -m -s /bin/bash ansible && echo "ansible:ansible" | chpasswd && usermod -aG wheel ansible
 
 # Configure SSH
-RUN mkdir /var/run/sshd && \
-    mkdir /home/ansible/.ssh && \
-    chown -R ansible:ansible /home/ansible/.ssh
+RUN mkdir /var/run/sshd && ssh-keygen -A \
+    && mkdir -p /home/ansible/.ssh \
+    && chown -R ansible:ansible /home/ansible/.ssh
 
 RUN echo "PermitRootLogin no" >> /etc/ssh/sshd_config && \
     echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config && \
-    echo "AllowUsers ansible" >> /etc/ssh/sshd_config
+    echo "AllowUsers ansible" >> /etc/ssh/sshd_config && \
+    chmod 644 /etc/ssh/sshd_config
 
 EXPOSE 22
 WORKDIR /home/ansible
 
 CMD ["/usr/sbin/sshd", "-D"]
 ```
+
+
 
 ## Creating the Docker Compose File
 
@@ -178,9 +176,6 @@ services:
 networks:
   ansible_net:
     driver: bridge
-    ipam: 
-      config: 
-        - subnet: 192.168.1.0/24
 ```
 
 ## Deploying the Environment
