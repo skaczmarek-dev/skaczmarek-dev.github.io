@@ -27,6 +27,10 @@ ansible_lab/
 
 ### Dockerfile for Ansible Master
 
+Create a Dockerfile specific to Ansible Master.
+
+Create a file `dockerfile.master`:
+
 ```
 FROM ubuntu:latest
 
@@ -58,9 +62,9 @@ CMD ["/usr/sbin/sshd", "-D"]
 
 ### Dockerfile for Ubuntu Managed Host
 
-We will create a common Dockerfile for the Ansible Master and Ubuntu Managed Host.
+Create a Dockerfile for Ubuntu Managed Host.
 
-Create the file `dockerfile.ubuntu`:
+Create a file `dockerfile.ubuntu`:
 
 ```
 FROM ubuntu:latest
@@ -98,7 +102,7 @@ CMD ["/usr/sbin/sshd", "-D"]
 
 Create a Dockerfile specific to Rocky Linux.
 
-Create the file `dockerfile.rocky`:
+Create a file `dockerfile.rocky`:
 
 ```
 FROM rockylinux:9
