@@ -114,7 +114,7 @@ RUN dnf update -y && dnf install -y \
     dnf clean all
 
 # Create a technical user
-RUN useradd -m -s /bin/bash ansible &&` \ 
+RUN useradd -m -s /bin/bash ansible && \ 
     echo "ansible:ansible" | chpasswd && \
     usermod -aG wheel ansible
 
