@@ -23,18 +23,22 @@ K3s is a simplified, production-ready Kubernetes distribution. Here are a few of
 
 A minimal setup on a virtual environment like Proxmox might look like this:
 
-| Role         | vCPU | RAM   | System Disk | Data Disk (Mounted as /var/lib/rancher) | OS             |
-|--------------|------|-------|-------------|------------------------------------------|----------------|
-| Master Node  | 2    | 2–4GB | 16 GB       | 10 GB+                                   | Any Linux distro |
-| Worker Node  | 2    | 2–4GB | 16 GB       | 10 GB+                                   | Any Linux distro |
+| Role         | vCPU | RAM   | System Disk | Data Disk | OS               |
+|--------------|------|-------|-------------|-----------|------------------|
+| Master Node  | 2    | 2–4GB | 16 GB       | 10 GB+    | Any Linux distro |
+| Worker Node  | 2    | 2–4GB | 16 GB       | 10 GB+    | Any Linux distro |
 
 **Note:** The data disk (`/dev/vda` in this example) will be mounted as `/var/lib/rancher`, where K3s stores its data.
 
 ## Installation Scripts
 
-Create the following scripts and run them as `root`.
+After creating the VMs, log into them and copy the scripts separately for master and worker node.
 
-### Master Node Setup Script (`k3s-master-setup.sh`)
+**Note:** The scripts will format additional disks, so make sure their names in the `DISK_DEVICE` variable are correct.
+
+### Master Node Setup Script
+
+`k3s-master-setup.sh`
 
 ```bash
 #!/bin/bash
@@ -74,9 +78,11 @@ echo "[✓] Installation complete. Node token:"
 cat /var/lib/rancher/k3s/server/node-token
 ```
 
-### Worker Node Setup Script (`k3s-worker-setup.sh`)
+### Worker Node Setup Script
 
-Replace `PASTE_MASTER_IP_HERE` and `PASTE_YOUR_TOKEN_HERE` accordingly.
+`k3s-worker-setup.sh` 
+
+**Note:** Replace `PASTE_MASTER_IP_HERE` and `PASTE_YOUR_TOKEN_HERE` accordingly.
 
 ```bash
 #!/bin/bash
@@ -117,17 +123,31 @@ curl -sfL ${K3S_INSTALL_URL} | K3S_URL="https://${MASTER_IP}:6443" K3S_TOKEN="${
 echo "[✓] Worker joined the cluster"
 ```
 
+Run both scripts as root:
+
+```
+# chmod +x k3s-master-setup.sh
+# ./k3s-master-setup.sh
+```
+
+Same thing for the worker node:
+
+```
+# chmod +x k3s-worker-setup.sh
+# ./k3s-worker-setup.sh
+```
+
 ## Deploying a Test Application
 
-Once the master node is ready, let's deploy a simple NGINX app to test everything.
+Once the cluster is ready, let's deploy a simple NGINX app to test everything.
 
-### Step 1: Create Deployment
+### Create Deployment
 
 ```bash
 kubectl create deployment hello --image=nginx
 ```
 
-### Step 2: Customize Index Page
+### Customize Index Page
 
 ```bash
 echo "Hello from Kubernetes Cluster!" > index.html
@@ -136,25 +156,21 @@ kubectl cp index.html $POD_NAME:/usr/share/nginx/html/index.html
 rm index.html
 ```
 
-### Step 3: Expose the Service
+### Expose the Service
 
 ```bash
 kubectl expose deployment hello --port=80 --type=NodePort
 ```
 
-### Step 4: Get the NodePort
+### Get the NodePort
 
 ```bash
-kubectl get svc hello
+# kubectl get svc hello
+NAME    TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+hello   NodePort   10.43.255.208   <none>        80:31884/TCP   115s
 ```
 
-Look for output like this:
-
-```plaintext
-hello   NodePort   10.43.255.208   <none>        80:31884/TCP   2m
-```
-
-### Step 5: Access in Browser
+### Access in Browser
 
 Navigate to:
 
@@ -162,6 +178,8 @@ Navigate to:
 http://<MASTER_NODE_IP>:<NodePort>
 http://<WORKER_NODE_IP>:<NodePort>
 ```
+
+In my case, the nodes have ip addresses 192.168.1.142 and 192.168.1.178, and the port checked in the previous command is 31884:
 
 ## Cleanup
 
@@ -171,7 +189,5 @@ To remove the test deployment and service:
 kubectl delete svc hello
 kubectl delete deployment hello
 ```
-
-## Final Thoughts
 
 K3s is a fantastic way to get hands-on with Kubernetes without the overhead of full-scale setups. It’s perfect for learning, testing, and home lab experimentation.
