@@ -198,19 +198,23 @@ Access the Ansible Master container:
 $ docker exec -it lab-ansible-master bash
 ```
 
-Create an Ansible inventory file (paste ip addresses obtained in the previous step):
+Create an Ansible inventory file:
+
+- paste ip addresses obtained in the previous step
+- paste password for ansible user
 
 ```bash
-$ echo "[ubuntu-managed]
-<lab-ubuntu-managed ip>
-
-[rocky-managed]
-<lab-rocky-managed ip>
-
+ansible@ansible-master:~$ cat /home/ansible/inventory 
 [all:vars]
+ansible_python_interpreter=/usr/bin/python3
 ansible_user=ansible
 ansible_password=ansible
-" > /home/ansible/inventory
+
+[ubuntu_managed]
+ubuntu-managed ansible_host=<ip> ansible_port=2223
+
+[rocky_managed]
+rocky-managed ansible_host=<ip> ansible_port=2224
 ```
 
 ## Testing the Environment
